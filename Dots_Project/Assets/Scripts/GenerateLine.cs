@@ -57,6 +57,10 @@ namespace Game
 				Vector3 start = trail.transform.position;
 				Vector3 destination = Path[i].transform.position;
 				while (Vector3.Distance(trail.transform.position, destination) > 0) {
+					// когда мы ставим игру на паузу через timeScale, инструкция yield return null продолжает выполняться,
+					// потому что она рассчитывается, исходя из каждого фрейма, а не секунды.
+					// из-за этого я сделала кривовато, но результативно:
+					if (Time.timeScale == 0) yield return new WaitForSeconds(0.5f);
 					trail.transform.position = Vector3.Lerp(start, destination, speed);
 					speed += drawSpeed;
 					yield return null;

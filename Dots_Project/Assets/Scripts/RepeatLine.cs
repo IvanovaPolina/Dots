@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -9,14 +11,35 @@ namespace Game
 	/// </summary>
 	public class RepeatLine : MonoBehaviour
 	{
-		private List<Cell> rest;  // сколько точек по линии осталось провести
-		private Cell mistake;       // клетка, которая не содержится в линии, и которую задел игрок
-		private bool isRepeated;
-
 		/// <summary>
 		/// Повторил ли игрок линию?
 		/// </summary>
 		public bool IsLineRepeated { get { return rest != null && rest.Count < 1; } }
+
+		private List<Cell> rest;  // сколько точек по линии осталось провести
+		private Cell mistake;       // клетка, которая не содержится в линии, и которую задел игрок
+		private bool isRepeated;	// флаг, прерывающий повторение игроком линии в случае его ошибки
+
+		private GraphicRaycaster graphicRaycaster;   // компонент на Canvas, отвечающий за raycast'ы
+		private EventSystem eventSystem;     // без него UI элементы не будут интерактивными
+		private PointerEventData eventData;     // регистратор события нажатия кнопки мыши
+
+		private void Start() {
+			graphicRaycaster = FindObjectOfType<GraphicRaycaster>();
+			eventSystem = FindObjectOfType<EventSystem>();
+		}
+
+		/// <summary>
+		/// Перехватывает нажатие на элементах UI
+		/// </summary>
+		bool IsClickOnUI() {
+			eventData = new PointerEventData(eventSystem);  // нажатие ЛКМ будем проверять на UI элементах
+			eventData.position = Input.mousePosition;   // регистрируем в событии текущую позицию мыши
+			List<RaycastResult> results = new List<RaycastResult>();    // для вывода результатов об объектах, в которые мы попали
+			graphicRaycaster.Raycast(eventData, results);   // пускаем луч в соотв. с настройками eventData и заносим результаты в список
+			if (results.Count > 0) return true; // если список содержит хоть один результат - мы попали в UI
+			return false;
+		}
 
 		/// <summary>
 		/// Проверяет, повторил ли игрок линию
@@ -26,8 +49,15 @@ namespace Game
 			rest.AddRange(path);
 			isRepeated = false;
 			mistake = null;
-			yield return new WaitUntil(() => Input.GetMouseButton(0) || Timer.Instance.RestTime <= 0);	// ждем нажатия ЛКМ
+#if UNITY_ANDROID
+			// ждем нажатия пальца по клетке, либо истечения времени
+			yield return new WaitUntil(() => Input.touchCount > 0 && !IsClickOnUI() || Timer.Instance.RestTime <= 0);
+			while (Input.touchCount > 0 && Input.GetTouch(0).phase != TouchPhase.Ended) {
+#else
+			// ждем нажатия ЛКМ по клетке, либо истечения времени
+			yield return new WaitUntil(() => Input.GetMouseButtonDown(0) && !IsClickOnUI() || Timer.Instance.RestTime <= 0);
 			while (Input.GetMouseButton(0)) {
+#endif
 				if (Timer.Instance.RestTime <= 0) break;
 				if (rest.Count == 0) break;    // если повторили все клетки, выходим из цикла while и проверяем результаты
 				isRepeated = IsRepeated();
