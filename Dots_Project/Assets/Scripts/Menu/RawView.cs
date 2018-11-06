@@ -44,7 +44,7 @@ namespace Game.Menu.Records
 					return result;
 				else return DateTime.MinValue;
 			}
-			set { dateTime.text = value.ToString(); }
+			set { dateTime.text = value.ToString("dd.MM.yyyy HH:mm"); }
 		}
 
 		/// <summary>
