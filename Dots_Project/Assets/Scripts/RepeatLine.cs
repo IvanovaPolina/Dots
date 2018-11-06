@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace Game
 {
@@ -20,25 +19,11 @@ namespace Game
 		private Cell mistake;       // клетка, которая не содержится в линии, и которую задел игрок
 		private bool isRepeated;	// флаг, прерывающий повторение игроком линии в случае его ошибки
 
-		private GraphicRaycaster graphicRaycaster;   // компонент на Canvas, отвечающий за raycast'ы
-		private EventSystem eventSystem;     // без него UI элементы не будут интерактивными
-		private PointerEventData eventData;     // регистратор события нажатия кнопки мыши
-
-		private void Start() {
-			graphicRaycaster = FindObjectOfType<GraphicRaycaster>();
-			eventSystem = FindObjectOfType<EventSystem>();
-		}
-
 		/// <summary>
 		/// Перехватывает нажатие на элементах UI
 		/// </summary>
 		bool IsClickOnUI() {
-			eventData = new PointerEventData(eventSystem);  // нажатие ЛКМ будем проверять на UI элементах
-			eventData.position = Input.mousePosition;   // регистрируем в событии текущую позицию мыши
-			List<RaycastResult> results = new List<RaycastResult>();    // для вывода результатов об объектах, в которые мы попали
-			graphicRaycaster.Raycast(eventData, results);   // пускаем луч в соотв. с настройками eventData и заносим результаты в список
-			if (results.Count > 0) return true; // если список содержит хоть один результат - мы попали в UI
-			return false;
+			return EventSystem.current.currentSelectedGameObject != null;
 		}
 
 		/// <summary>
