@@ -14,7 +14,11 @@ namespace Game.Menu.Records
 		private string filename = "saves.dat";
 
 		public RecordsData() {
+#if UNITY_ANDROID
+			path = Path.Combine(Application.persistentDataPath, filename);
+#else
 			path = Path.Combine(Application.dataPath, filename);
+#endif
 		}
 		
 		/// <summary>
