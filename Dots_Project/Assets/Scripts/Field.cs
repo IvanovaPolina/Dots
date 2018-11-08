@@ -67,7 +67,7 @@ namespace Game
 					field[i, j].J = j;
 					float horizontal = cellSize / 2 + cellSize * j;     // позиция клетки по горизонтали
 					float vertical = cellSize / 2 + cellSize * i;   // позиция клетки по вертикали
-																	// перед спавном клетки учитываем отступ и смещение от центра экрана в левый нижний угол
+					// перед спавном клетки учитываем отступ и смещение от центра экрана в левый нижний угол
 					if (isHorizontal) {
 						horizontal += indent + zeroInUnit.x;
 						vertical += zeroInUnit.y;
