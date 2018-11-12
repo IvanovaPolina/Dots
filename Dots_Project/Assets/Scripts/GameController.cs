@@ -15,7 +15,6 @@ namespace Game
 		private Timer timer;
 		private Score score;
 		
-
 		[SerializeField]
 		[Range(2, 9)]
 		private int lineStartLength = 3;    // изначальная длина линии
@@ -65,15 +64,12 @@ namespace Game
 				timer.MultTime();  // удваиваем время за правильную линию
 				score.Plus(timer.LevelTime, lineStartLength); // прибавляем набранные очки
 				if (lineStartLength < lineEndLength) lineStartLength++;
-			} else {
-				timer.ReduceTime();    // убавляем время за неправильную линию
-			}
+			} else timer.ReduceTime();    // убавляем время за неправильную линию
 		}
 
 		/// <summary>
 		/// Сбрасывает состояние клеток до первоначального
 		/// </summary>
-		/// <param name="path">Список необходимых клеток</param>
 		private void ResetCellsState() {
 			foreach (var cell in generateLine.Path) {
 				cell.Collider2D.enabled = true;
