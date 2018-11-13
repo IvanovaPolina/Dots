@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game.Menu.Records;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Game.Menu
@@ -14,6 +15,11 @@ namespace Game.Menu
 		/// Доступ к данному классу
 		/// </summary>
 		public static GameMenu Instance { get; private set; }
+
+		[SerializeField]
+		private AudioSource audioSource;
+		[SerializeField]
+		private AudioClip click;
 
 		/// <summary>
 		/// Список панелей игрового меню
@@ -32,6 +38,7 @@ namespace Game.Menu
 			if (Instance) DestroyImmediate(this);
 			else Instance = this;
 
+			gameObject.AddComponent<TableData>();   // класс TableData загружает данные о поставленных рекордах
 			Time.timeScale = 1f;
 		}
 
@@ -53,6 +60,7 @@ namespace Game.Menu
 		/// Для кнопки паузы
 		/// </summary>
 		public void Pause() {
+			audioSource.PlayOneShot(click);
 			Time.timeScale = 0;
 			DisplayPanel(Panel.Pause);
 		}
@@ -61,6 +69,7 @@ namespace Game.Menu
 		/// Для кнопки "Продолжить"
 		/// </summary>
 		public void Continue() {
+			audioSource.PlayOneShot(click);
 			Time.timeScale = 1f;
 			DisplayPanel(Panel.Game);
 		}
@@ -77,6 +86,7 @@ namespace Game.Menu
 		/// Для кнопки "Рекорды"
 		/// </summary>
 		public void Records() {
+			audioSource.PlayOneShot(click);
 			Time.timeScale = 0;
 			DisplayPanel(Panel.Records);
 		}
@@ -85,6 +95,7 @@ namespace Game.Menu
 		/// Для кнопки "Назад" в панели "Рекорды"
 		/// </summary>
 		public void Records_Back() {
+			audioSource.PlayOneShot(click);
 			DisplayPanel(Panel.Pause);
 		}
 

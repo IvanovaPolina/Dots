@@ -12,6 +12,9 @@ namespace Game.Menu
 		[SerializeField]
 		private GameObject menuPanel, recordsPanel;
 
+		[SerializeField]
+		private AudioSource audioSource;
+
 		private void Awake() {
 			gameObject.AddComponent<TableData>();   // класс TableData загружает данные о поставленных рекордах
 		}
@@ -39,6 +42,7 @@ namespace Game.Menu
 		/// Для кнопки "Рекорды"
 		/// </summary>
 		public void Records() {
+			audioSource.Play();
 			DisplayPanel(recordsPanel);
 		}
 
@@ -46,6 +50,7 @@ namespace Game.Menu
 		/// Для кнопки "Назад" в панели "Рекорды"
 		/// </summary>
 		public void Records_Back() {
+			audioSource.Play();
 			DisplayPanel(menuPanel);
 		}
 

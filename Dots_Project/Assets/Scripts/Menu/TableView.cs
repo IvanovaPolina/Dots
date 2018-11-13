@@ -34,8 +34,6 @@ namespace Game.Menu.Records
 				table[i].DateTime = records[i].DateTime;
 				table[i].Score = records[i].Score;
 			}
-			//RectTransform rectTransform = GetComponent<RectTransform>();
-			//rectTransform.position = new Vector3(rectTransform.position.x, rectTransform.position.y, 0);
 		}
 	}
 }

@@ -67,7 +67,6 @@ namespace Game
 		/// </summary>
 		/// <param name="path">Начатый путь</param>
 		/// <param name="count">Количество точек, которые осталось задействовать в построении</param>
-		/// <param name="countWithoutLostCorners">Величина, необходимая для проверки на отсечение угловых точек. = кол-во клеток поля минус углы, которые могут быть потеряны</param>
 		private void BuildRestPoints(List<Cell> path, int count) {
 			while (count > 0) {     // если осталось 0 клеток - путь построен
 				Cell tail = path[path.Count - 1];   // последний элемент в пути

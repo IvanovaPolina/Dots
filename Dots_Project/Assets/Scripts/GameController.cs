@@ -18,24 +18,27 @@ namespace Game
 		[SerializeField]
 		[Range(2, 9)]
 		private int lineStartLength = 3;    // изначальная длина линии
-		private int lineEndLength;      // максимальная длина линии
+		private int lineMaxLength;      // максимальная длина линии
 
 		[SerializeField]
-		private TrailRenderer trailPrefab;   // префаб будущей линии (компонент Trail Renderer)
+		private TrailRenderer trailPrefab;   // префаб будущей линии
 		private TrailRenderer trail;    // ссылка на заспавненную линию
 		[SerializeField]
 		[Range(1f, 10f)]
 		private float drawSpeed = 2f;   // скорость отрисовки линии
+		
+		private AudioSource audioSource;
 
 		private void Start() {
 			generateLine = gameObject.AddComponent<GenerateLine>();
 			repeatLine = gameObject.AddComponent<RepeatLine>();
 			timer = Timer.Instance;
-			score = Score.Instance;
-			lineEndLength = Field.Instance.GameField.Length;
+			score = gameObject.AddComponent<Score>();
+			lineMaxLength = Field.Instance.GameField.Length;
 			drawSpeed = drawSpeed / 100f;
 			trail = Instantiate(trailPrefab);
 			trail.enabled = false;
+			audioSource = GetComponent<AudioSource>();
 			StartCoroutine(Game());
 		}
 
@@ -52,6 +55,7 @@ namespace Game
 				ResetCellsState();
 				yield return null;
 			}
+			audioSource.Play();
 			TableData.Instance.SaveRecord(score.CurrentScore);
 			GameMenu.Instance.DisplayPanel(GameMenu.Panel.Lose);
 		}
@@ -63,7 +67,7 @@ namespace Game
 			if (repeatLine.IsLineRepeated) {
 				timer.MultTime();  // удваиваем время за правильную линию
 				score.Plus(timer.LevelTime, lineStartLength); // прибавляем набранные очки
-				if (lineStartLength < lineEndLength) lineStartLength++;
+				if (lineStartLength < lineMaxLength) lineStartLength++;
 			} else timer.ReduceTime();    // убавляем время за неправильную линию
 		}
 

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 namespace Game
 {
 	/// <summary>
-	/// Класс содержит в себе логику работы со временем в игре
+	/// Класс содержит в себе логику работы с таймером
 	/// </summary>
 	public class Timer : MonoBehaviour
 	{

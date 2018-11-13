@@ -9,7 +9,7 @@ namespace Game
 	public class Score : MonoBehaviour
 	{
 		/// <summary>
-		/// Предоставляет доступ к данному классу
+		/// Доступ к данному классу
 		/// </summary>
 		public static Score Instance { get; private set; }
 		/// <summary>
@@ -26,7 +26,6 @@ namespace Game
 		public float CurrentScore { get { return score; } }
 
 		private float score = 0;
-		private float bonus = 0;	// бонусные очки
 
 		private void Awake() {
 			// создаем единственный экземпляр данного класса
@@ -56,7 +55,6 @@ namespace Game
 		/// <param name="bonusTime">Время, набранное игроком сверх максимального</param>
 		private void BonusChange(float bonusTime) {
 			float tempBonus = bonusTime / 2f;
-			bonus += tempBonus;
 			score += tempBonus;
 			if(OnBonusValueChanged != null) OnBonusValueChanged.Invoke(tempBonus);
 		}

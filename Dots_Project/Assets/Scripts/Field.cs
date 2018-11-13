@@ -8,18 +8,18 @@ namespace Game
 	public class Field : MonoBehaviour
 	{
 		/// <summary>
-		/// Предоставляет доступ к данному классу (который имеет единственный экземпляр)
+		/// Доступ к данному классу
 		/// </summary>
 		public static Field Instance { get; private set; }
 
 		[SerializeField]
 		private Cell cellPrefab;
 
-		private Cell[,] field;
 		/// <summary>
-		/// Игровое поле из клеток
+		/// Созданное игровое поле
 		/// </summary>
 		public Cell[,] GameField { get { return field; } }
+		private Cell[,] field;
 
 		[SerializeField]
 		private int size = 3;
@@ -35,7 +35,7 @@ namespace Game
 			InitNeighbours();
 
 			#region Test
-			//foreach (var n in field[0, 0].Neighbours)
+			//foreach (var n in field[1, 1].Neighbours)
 			//	n.ChangeColor(Color.blue);
 			#endregion
 		}
@@ -89,23 +89,5 @@ namespace Game
 			foreach (var cell in field)
 				cell.InitNeighbours();
 		}
-
-		///// <summary>
-		///// Возвращает все соседние клетки от имеющейся
-		///// </summary>
-		///// <param name="cell">Клетка, соседей которой нужно найти</param>
-		//private List<Cell> NeighbourCells(Cell cell) {
-		//	List<Cell> neighbours = new List<Cell>();
-		//	int i = cell.I, j = cell.J;
-		//	if (i - 1 >= 0 && j - 1 >= 0) neighbours.Add(field[i - 1, j - 1]);  // слева снизу
-		//	if (j - 1 >= 0) neighbours.Add(field[i, j - 1]);    // слева
-		//	if (i + 1 < field.GetLength(0) && j - 1 >= 0) neighbours.Add(field[i + 1, j - 1]);  // слева сверху
-		//	if (i + 1 < field.GetLength(0)) neighbours.Add(field[i + 1, j]);    // сверху
-		//	if (i + 1 < field.GetLength(0) && j + 1 < field.GetLength(1)) neighbours.Add(field[i + 1, j + 1]);  // справа сверху
-		//	if (j + 1 < field.GetLength(1)) neighbours.Add(field[i, j + 1]);    // справа
-		//	if (i - 1 >= 0 && j + 1 < field.GetLength(1)) neighbours.Add(field[i - 1, j + 1]);  // справа снизу
-		//	if (i - 1 >= 0) neighbours.Add(field[i - 1, j]);    // снизу
-		//	return neighbours;
-		//}
 	}
 }

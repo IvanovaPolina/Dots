@@ -12,18 +12,17 @@ namespace Game.Views
 		private Slider slider;
 
 		private void Awake() {
-			Timer.OnTimerValueChanged += TimerValue;    // подписываемся на событие, отвечающее за значение таймера
+			Timer.OnTimerValueChanged += TimerValue;
 			slider = GetComponent<Slider>();
 		}
 
 		private void OnDestroy() {
-			Timer.OnTimerValueChanged -= TimerValue;    // не забываем отписываться от события
+			Timer.OnTimerValueChanged -= TimerValue;
 		}
 
 		/// <summary>
 		/// Меняет заполнение слайдера в зависимости от передаваемого значения таймера
 		/// </summary>
-		/// <param name="value">Текущее значение таймера</param>
 		private void TimerValue(float value) {
 			slider.value = value;
 		}

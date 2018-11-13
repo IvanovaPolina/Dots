@@ -61,17 +61,12 @@ namespace Game
 		/// <summary>
 		/// Возвращает все соседние клетки поля
 		/// </summary>
-		/// <param name="field">Поле, в котором будем искать</param>
 		private List<Cell> GetNeighbours(Cell[,] field) {
-			List<Cell> neighbours = new List<Cell>();
-			if (I - 1 >= 0 && J - 1 >= 0) neighbours.Add(field[I - 1, J - 1]);  // слева снизу
-			if (J - 1 >= 0) neighbours.Add(field[I, J - 1]);    // слева
-			if (I + 1 < field.GetLength(0) && J - 1 >= 0) neighbours.Add(field[I + 1, J - 1]);  // слева сверху
-			if (I + 1 < field.GetLength(0)) neighbours.Add(field[I + 1, J]);    // сверху
-			if (I + 1 < field.GetLength(0) && J + 1 < field.GetLength(1)) neighbours.Add(field[I + 1, J + 1]);  // справа сверху
-			if (J + 1 < field.GetLength(1)) neighbours.Add(field[I, J + 1]);    // справа
-			if (I - 1 >= 0 && J + 1 < field.GetLength(1)) neighbours.Add(field[I - 1, J + 1]);  // справа снизу
-			if (I - 1 >= 0) neighbours.Add(field[I - 1, J]);    // снизу
+			List<Cell> neighbours = new List<Cell>(8);
+			var colliders = Physics2D.OverlapBoxAll(col2D.bounds.center, transform.localScale * 1.5f, 0);
+			foreach (var item in colliders)
+				if (item != col2D)
+					neighbours.Add(item.GetComponent<Cell>());
 			return neighbours;
 		}
 	}

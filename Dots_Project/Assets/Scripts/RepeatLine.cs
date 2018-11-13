@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace Game
@@ -10,6 +11,12 @@ namespace Game
 	/// </summary>
 	public class RepeatLine : MonoBehaviour
 	{
+		/// <summary>
+		/// Делегат принимает в качестве аргумента значение, указывающее, коснулся ли игрок одной из точек линии.
+		/// Вторым аргументом является данная клетка
+		/// </summary>
+		public static UnityAction<bool, Cell> OnRightCellClicked;
+
 		/// <summary>
 		/// Повторил ли игрок линию?
 		/// </summary>
@@ -30,8 +37,7 @@ namespace Game
 		/// Проверяет, повторил ли игрок линию
 		/// </summary>
 		public IEnumerator GetLine(List<Cell> path) {
-			rest = new List<Cell>(path.Count);
-			rest.AddRange(path);
+			rest = new List<Cell>(path);
 			isRepeated = false;
 			mistake = null;
 #if UNITY_ANDROID
@@ -62,12 +68,12 @@ namespace Game
 			RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
 			if (hit) {      // если задели коллайдер
 				if (hit.collider.gameObject == rest[0].gameObject) { // и этот коллайдер принадлежит первой клетке линии
-					rest[0].ChangeColor(Color.green); // меняем цвет этой клетки
+					if (OnRightCellClicked != null) OnRightCellClicked.Invoke(true, rest[0]);
 					rest.Remove(rest[0]);   // удаляем из списка эту клетку, чтобы на её место встала следующая
 					hit.collider.enabled = false;   // исключаем возможность попадания в тот же коллайдер
 				} else {
 					mistake = hit.collider.GetComponent<Cell>();
-					mistake.ChangeColor(Color.red);
+					if (OnRightCellClicked != null) OnRightCellClicked.Invoke(false, mistake);
 					return false;
 				}
 			}

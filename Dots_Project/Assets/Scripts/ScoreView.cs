@@ -30,7 +30,6 @@ namespace Game.Views
 		/// <summary>
 		/// Обновляет показатель счета и отображает его в текстовом поле
 		/// </summary>
-		/// <param name="score">Набранный счет</param>
 		private void ChangeScore(float score) {
 			mainScore.text = Mathf.RoundToInt(score).ToString();
 		}
@@ -38,7 +37,6 @@ namespace Game.Views
 		/// <summary>
 		/// Отображает бонусные очки
 		/// </summary>
-		/// <param name="bonus">Значение, которое следует отобразить</param>
 		private void DisplayBonus(float bonus) {
 			bonusScore.text = "+" + Mathf.RoundToInt(bonus).ToString();
 			bonusAnimator.SetTrigger("Bonus");
