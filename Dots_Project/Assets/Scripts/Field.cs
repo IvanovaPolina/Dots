@@ -30,7 +30,6 @@ namespace Game
 			else Instance = this;
 
 			// генерируем игровое поле
-			field = new Cell[size, size];
 			SpawnField();
 			InitNeighbours();
 
@@ -44,6 +43,7 @@ namespace Game
 		/// Создает квадратное поле из клеток
 		/// </summary>
 		private void SpawnField() {
+			field = new Cell[size, size];
 			Vector2 screenInPixels = new Vector2(Screen.width, Screen.height);  // координаты правого верхнего угла экрана в пикселях
 			Vector2 screenInUnits = Camera.main.ScreenToWorldPoint(screenInPixels);  // координаты правого верхнего угла экрана в юнитах
 			Vector2 zeroInUnit = Camera.main.ScreenToWorldPoint(Vector2.zero);  // координаты левого нижнего угла экрана в юнитах

@@ -1507,6 +1507,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxTime: 30
+  partOfTheMaxTime: 4
 --- !u!82 &1569203120
 AudioSource:
   m_ObjectHideFlags: 0

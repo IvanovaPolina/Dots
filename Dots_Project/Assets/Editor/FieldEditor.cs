@@ -7,7 +7,6 @@ namespace Game.Editor
 	public class FieldEditor : UnityEditor.Editor
 	{
 		public override void OnInspectorGUI() {
-			Field field = (Field)target;
 			SerializedProperty _cellPrefab = serializedObject.FindProperty("cellPrefab");
 			EditorGUILayout.PropertyField(_cellPrefab, new GUIContent("Префаб клетки", "Префаб клетки поля"));
 			SerializedProperty _size = serializedObject.FindProperty("size");

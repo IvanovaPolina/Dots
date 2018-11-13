@@ -16,7 +16,6 @@ namespace Game
 		private Score score;
 		
 		[SerializeField]
-		[Range(2, 9)]
 		private int lineStartLength = 3;    // изначальная длина линии
 		private int lineMaxLength;      // максимальная длина линии
 
@@ -24,7 +23,6 @@ namespace Game
 		private TrailRenderer trailPrefab;   // префаб будущей линии
 		private TrailRenderer trail;    // ссылка на заспавненную линию
 		[SerializeField]
-		[Range(1f, 10f)]
 		private float drawSpeed = 2f;   // скорость отрисовки линии
 		
 		private AudioSource audioSource;

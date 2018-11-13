@@ -10,8 +10,9 @@ namespace Game
 	public class Timer : MonoBehaviour
 	{
 		[SerializeField]
-		[Range(3f, 60f)]
-		private float maxTime = 30f;    // максимальное время с момента начала игры
+		private float maxTime = 30f;    // максимальное значение шкалы времени на протяжении игры
+		[SerializeField]
+		private float partOfTheMaxTime = 4f; // часть максимального времени при старте игры (здесь: 1/4)
 
 		/// <summary>
 		/// Делегат отвечает за передачу измененного значения таймера
@@ -51,7 +52,7 @@ namespace Game
 			if (Instance) DestroyImmediate(this);
 			else Instance = this;
 
-			RestTime = maxTime / 4f;
+			RestTime = maxTime / partOfTheMaxTime;
 		}
 
 		private void Start() {
