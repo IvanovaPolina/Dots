@@ -9,9 +9,11 @@ namespace Game
 	/// </summary>
 	public class Timer : MonoBehaviour
 	{
-		[SerializeField]
+		[Tooltip("Максимальное значение шкалы времени на протяжении игры")]
+		[Range(10f, 30f)] [SerializeField]
 		private float maxTime = 30f;    // максимальное значение шкалы времени на протяжении игры
-		[SerializeField]
+		[Tooltip("Часть от максимального времени (1/2, 1/3 ... 1/PartOfTheMaxTime), которая будет дана при старте")]
+		[Range(1f, 5f)] [SerializeField]
 		private float partOfTheMaxTime = 4f; // часть максимального времени при старте игры (здесь: 1/4)
 
 		/// <summary>

@@ -21,8 +21,8 @@ namespace Game
 		public Cell[,] GameField { get { return field; } }
 		private Cell[,] field;
 
-		[SerializeField]
-		private int size = 3;
+		[Range(2, 4)] [SerializeField]
+		private int size = 3;       // Масштаб квадратного поля (N x N)
 
 		private void Awake() {
 			// реализуем паттерн Singleton - создаем единственный экземпляр данного класса, т.к. игровое поле у нас одно

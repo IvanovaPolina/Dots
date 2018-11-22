@@ -15,14 +15,16 @@ namespace Game
 		private Timer timer;
 		private Score score;
 		
-		[SerializeField]
+		[Tooltip("Изначальная длина линии при старте игры")]
+		[Range(2,9)] [SerializeField]
 		private int lineStartLength = 3;    // изначальная длина линии
 		private int lineMaxLength;      // максимальная длина линии
 
 		[SerializeField]
 		private TrailRenderer trailPrefab;   // префаб будущей линии
 		private TrailRenderer trail;    // ссылка на заспавненную линию
-		[SerializeField]
+		[Tooltip("Изначальная скорость отрисовки линии")]
+		[Range(1f, 10f)] [SerializeField]
 		private float drawSpeed = 2f;   // скорость отрисовки линии
 		
 		private AudioSource audioSource;
