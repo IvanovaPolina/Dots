@@ -40,15 +40,9 @@ namespace Game
 			rest = new List<Cell>(path);
 			isRepeated = false;
 			mistake = null;
-#if UNITY_ANDROID
-			// ждем нажатия пальца по клетке, либо истечения времени
-			yield return new WaitUntil(() => Input.touchCount > 0 && !IsClickOnUI() || Timer.Instance.RestTime <= 0);
-			while (Input.touchCount > 0 && Input.GetTouch(0).phase != TouchPhase.Ended) {
-#else
-			// ждем нажатия ЛКМ по клетке, либо истечения времени
-			yield return new WaitUntil(() => Input.GetMouseButtonDown(0) && !IsClickOnUI() || Timer.Instance.RestTime <= 0);
-			while (Input.GetMouseButton(0)) {
-#endif
+			// ждем нажатия пальца/ЛКМ по клетке, либо истечения времени
+			yield return new WaitUntil(() => CrossplatformInput.IsPressedDown && !IsClickOnUI() || Timer.Instance.RestTime <= 0);
+			while (CrossplatformInput.IsPressed) {
 				if (Timer.Instance.RestTime <= 0) break;
 				if (rest.Count == 0) break;    // если повторили все клетки, выходим из цикла while и проверяем результаты
 				isRepeated = IsRepeated();
@@ -64,7 +58,7 @@ namespace Game
 		/// Проверяет, повторил ли игрок линию и не допустил ли ошибку
 		/// </summary>
 		private bool IsRepeated() {
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);    // пускаем луч через экран
+			Ray ray = Camera.main.ScreenPointToRay(CrossplatformInput.CurrentPosition);    // пускаем луч через экран
 			RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
 			if (hit) {      // если задели коллайдер
 				if (hit.collider.gameObject == rest[0].gameObject) { // и этот коллайдер принадлежит первой клетке линии
