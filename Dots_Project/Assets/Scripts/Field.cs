@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Game
 {
@@ -56,7 +57,7 @@ namespace Game
 			if (minSide == screenScale.y) isHorizontal = true;
 
 			// определяем размер отступов от краёв экрана
-			float indent = Mathf.Abs((screenScale.x - screenScale.y) / 2);
+			float indent = Math.Abs((screenScale.x - screenScale.y) / 2f);
 
 			// заполняем и отрисовываем массив клеток
 			GameObject root = new GameObject("Root");
@@ -65,8 +66,8 @@ namespace Game
 					field[i, j] = Instantiate(cellPrefab, root.transform);
 					field[i, j].I = i;
 					field[i, j].J = j;
-					float horizontal = cellSize / 2 + cellSize * j;     // позиция клетки по горизонтали
-					float vertical = cellSize / 2 + cellSize * i;   // позиция клетки по вертикали
+					float horizontal = cellSize / 2f + cellSize * j;     // позиция клетки по горизонтали
+					float vertical = cellSize / 2f + cellSize * i;   // позиция клетки по вертикали
 					// перед спавном клетки учитываем отступ и смещение от центра экрана в левый нижний угол
 					if (isHorizontal) {
 						horizontal += indent + zeroInUnit.x;

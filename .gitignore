@@ -29,7 +29,7 @@ Assets/IGNORED.meta
 
 [Oo]bj/
 
-/.vs/
+.vs/
 
 # mstest test results
 TestResults
