@@ -23,6 +23,11 @@ namespace Game
 		}
 
 		/// <summary>
+		/// Возвращает true, если отпущена ЛКМ, либо нет прикосновения к экрану
+		/// </summary>
+		public static bool IsPressedUp { get { return Input.touchCount == 0 && !Input.GetMouseButton(0); } }
+
+		/// <summary>
 		/// Возвращает текущую позицию мыши/тача
 		/// </summary>
 		public static Vector3 CurrentPosition { get { return Input.mousePosition; } }

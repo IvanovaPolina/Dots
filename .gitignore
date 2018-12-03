@@ -26,9 +26,6 @@ Assets/IGNORED
 Assets/IGNORED.meta
 
 # VS2013
-
-[Oo]bj/
-
 .vs/
 
 # mstest test results
@@ -68,8 +65,10 @@ TestResults
 ipch/
 *.aps
 *.ncb
+*.opendb
 *.opensdf
 *.sdf
+*.VC.db
 
 # Visual Studio profiler
 *.psess

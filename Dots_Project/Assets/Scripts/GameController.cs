@@ -49,10 +49,10 @@ namespace Game
 				if (repeatLine.IsLineRepeated) generateLine.NewLine(lineStartLength);
 				yield return StartCoroutine(generateLine.DrawLine(trail, drawSpeed, 1f));   // ждем отрисовки линии
 				timer.StartCounting();
-				yield return StartCoroutine(repeatLine.GetLine(generateLine.Path)); // ждем, пока игрок повторит её
+				repeatLine.Repeat(generateLine.Path);
+				yield return new WaitUntil(() => repeatLine.IsFinishRepeating); // ждем, пока игрок повторит её
 				timer.StopCounting();
 				CheckLineRepeating();
-				ResetCellsState();
 				yield return null;
 			}
 			audioSource.Play();
@@ -69,16 +69,6 @@ namespace Game
 				score.Plus(timer.LevelTime, lineStartLength); // прибавляем набранные очки
 				if (lineStartLength < lineMaxLength) lineStartLength++;
 			} else timer.ReduceTime();    // убавляем время за неправильную линию
-		}
-
-		/// <summary>
-		/// Сбрасывает состояние клеток до первоначального
-		/// </summary>
-		private void ResetCellsState() {
-			foreach (var cell in generateLine.Path) {
-				cell.Collider2D.enabled = true;
-				cell.ResetColor();
-			}
 		}
 	}
 }
