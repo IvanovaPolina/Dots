@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4792455483707884}
   - component: {fileID: 212823974929648826}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 212992316754803810}
   - component: {fileID: 114904102351337978}
   - component: {fileID: 61353452461192418}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cell
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Game.Views
 {
@@ -15,20 +16,36 @@ namespace Game.Views
 		private void Awake() {
 			audioSource = GetComponent<AudioSource>();
 			RepeatLine.OnRightCellClicked += ChangeCellState;
+			RepeatLine.OnCellsStatesReset += ResetCellsStates;
 		}
 
 		private void OnDestroy() {
 			RepeatLine.OnRightCellClicked -= ChangeCellState;
+			RepeatLine.OnCellsStatesReset -= ResetCellsStates;
 		}
-		
+
+		/// <summary>
+		/// Меняет внешний вид клетки в зависимости от того, правильная она или нет
+		/// </summary>
+		/// <param name="state">Является ли выбранная игроком клетка правильной</param>
+		/// <param name="cell">Клетка, выбранная игроком</param>
 		private void ChangeCellState(bool state, Cell cell) {
-			if(state) {
+			if (state) {
 				audioSource.PlayOneShot(rightClick);
 				cell.ChangeColor(Color.green);
-				return;
+			} else {
+				audioSource.PlayOneShot(wrongClick);
+				cell.ChangeColor(Color.red);
 			}
-			audioSource.PlayOneShot(wrongClick);
-			cell.ChangeColor(Color.red);
+		}
+
+		/// <summary>
+		/// Возвращает всем клеткам их стандартный вид
+		/// </summary>
+		private void ResetCellsStates(List<Cell> cells) {
+			if (cells == null || cells.Count == 0) return;
+			foreach (var cell in cells)
+				cell.ResetColor();
 		}
 	}
 }
