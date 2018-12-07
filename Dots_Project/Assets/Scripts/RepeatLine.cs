@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace Game
@@ -11,6 +10,10 @@ namespace Game
 	/// </summary>
 	public class RepeatLine : MonoBehaviour
 	{
+		/// <summary>
+		/// Делегат передаёт состояние игры, можно ли отображать взаимодействие с экраном
+		/// </summary>
+		public static Action<bool> OnFingerCouldPress;
 		/// <summary>
 		/// Делегат принимает в качестве аргумента значение, указывающее, коснулся ли игрок одной из точек линии.
 		/// Вторым аргументом является данная клетка
@@ -129,7 +132,8 @@ namespace Game
 // ---------------- Выполняется один раз ------------------------
 		private void OnceNone() {
 			IsFinishRepeating = true;
-			if(selectedCells.Count > 0) {
+			if (OnFingerCouldPress != null) OnFingerCouldPress.Invoke(false);
+			if (selectedCells.Count > 0) {
 				if (OnCellsStatesReset != null) OnCellsStatesReset.Invoke(selectedCells);
 				foreach (var cell in selectedCells)
 					cell.Collider2D.enabled = true;
@@ -142,7 +146,7 @@ namespace Game
 		}
 
 		private void OnceDraw() {
-
+			if(OnFingerCouldPress != null) OnFingerCouldPress.Invoke(true);
 		}
 // --------------------------------------------------------------
 

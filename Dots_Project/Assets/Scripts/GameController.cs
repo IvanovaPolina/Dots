@@ -21,8 +21,7 @@ namespace Game
 		private int lineMaxLength;      // максимальная длина линии
 
 		[SerializeField]
-		private TrailRenderer trailPrefab;   // префаб будущей линии
-		private TrailRenderer trail;    // ссылка на заспавненную линию
+		private TrailRenderer lineTrail;    // ссылка на объект, которым будем рисовать линию
 		[Tooltip("Изначальная скорость отрисовки линии")]
 		[Range(1f, 10f)] [SerializeField]
 		private float drawSpeed = 2f;   // скорость отрисовки линии
@@ -36,8 +35,8 @@ namespace Game
 			score = gameObject.AddComponent<Score>();
 			lineMaxLength = Field.Instance.GameField.Length;
 			drawSpeed = drawSpeed / 100f;
-			trail = Instantiate(trailPrefab);
-			trail.enabled = false;
+			lineTrail = Instantiate(lineTrail);
+			lineTrail.enabled = false;
 			audioSource = GetComponent<AudioSource>();
 			StartCoroutine(Game());
 		}
@@ -47,7 +46,7 @@ namespace Game
 			while (timer.RestTime > 0) {
 				yield return new WaitForSeconds(1f);    // задержка между уровнями
 				if (repeatLine.IsLineRepeated) generateLine.NewLine(lineStartLength);
-				yield return StartCoroutine(generateLine.DrawLine(trail, drawSpeed, 1f));   // ждем отрисовки линии
+				yield return StartCoroutine(generateLine.DrawLine(lineTrail, drawSpeed, 1f));   // ждем отрисовки линии
 				timer.StartCounting();
 				repeatLine.Repeat(generateLine.Path);
 				yield return new WaitUntil(() => repeatLine.IsFinishRepeating); // ждем, пока игрок повторит её

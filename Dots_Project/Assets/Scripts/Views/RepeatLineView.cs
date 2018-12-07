@@ -9,7 +9,11 @@ namespace Game.Views
 	public class RepeatLineView : MonoBehaviour
 	{
 		[SerializeField]
-		private AudioClip rightClick, wrongClick;
+		private AudioClip rightClick;
+		[SerializeField]
+		private AudioClip wrongClick;
+		[SerializeField]
+		private TrailRenderer fingerTrail;
 
 		private AudioSource audioSource;
 
@@ -17,11 +21,21 @@ namespace Game.Views
 			audioSource = GetComponent<AudioSource>();
 			RepeatLine.OnRightCellClicked += ChangeCellState;
 			RepeatLine.OnCellsStatesReset += ResetCellsStates;
+			fingerTrail = Instantiate(fingerTrail);
+			CreateTrail(false);
+			RepeatLine.OnFingerCouldPress += CreateTrail;
+		}
+
+		private void Update() {
+			if (!fingerTrail.enabled) return;
+			Vector2 pos = Camera.main.ScreenToWorldPoint(CrossplatformInput.CurrentPosition);
+			fingerTrail.transform.position = pos;
 		}
 
 		private void OnDestroy() {
 			RepeatLine.OnRightCellClicked -= ChangeCellState;
 			RepeatLine.OnCellsStatesReset -= ResetCellsStates;
+			RepeatLine.OnFingerCouldPress -= CreateTrail;
 		}
 
 		/// <summary>
@@ -46,6 +60,18 @@ namespace Game.Views
 			if (cells == null || cells.Count == 0) return;
 			foreach (var cell in cells)
 				cell.ResetColor();
+		}
+
+		/// <summary>
+		/// Активирует/деактивирует отображение следа при взаимодействии с экраном
+		/// </summary>
+		private void CreateTrail(bool emitting) {
+			if (emitting) {
+				Vector2 pos = Camera.main.ScreenToWorldPoint(CrossplatformInput.CurrentPosition);
+				fingerTrail.transform.position = pos;
+				fingerTrail.Clear();
+				fingerTrail.enabled = true;
+			} else fingerTrail.enabled = false;
 		}
 	}
 }

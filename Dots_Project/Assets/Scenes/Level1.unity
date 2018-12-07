@@ -1492,8 +1492,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lineStartLength: 2
-  trailPrefab: {fileID: 96554696446867648, guid: f2a1e37392b6aa7498eba0d1bd161455,
-    type: 2}
+  lineTrail: {fileID: 96554696446867648, guid: f2a1e37392b6aa7498eba0d1bd161455, type: 2}
   drawSpeed: 2
 --- !u!114 &1569203119
 MonoBehaviour:
@@ -1616,6 +1615,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rightClick: {fileID: 8300000, guid: e305bb36741ef58409d77c31f02362e0, type: 3}
   wrongClick: {fileID: 8300000, guid: 285b3c89ef6a66a4f9e6bf0a407ff3f7, type: 3}
+  fingerTrail: {fileID: 96449384628278982, guid: d4b270aaf25ed3748bc3f3451fa4b614,
+    type: 2}
 --- !u!1 &1664892193
 GameObject:
   m_ObjectHideFlags: 0
@@ -1816,7 +1817,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!82 &1666647700
 AudioSource:
   m_ObjectHideFlags: 0
