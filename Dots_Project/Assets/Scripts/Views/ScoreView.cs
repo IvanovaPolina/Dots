@@ -14,6 +14,10 @@ namespace Game.Views
 		private Text bonusScore;
 		[SerializeField]
 		private Animator bonusAnimator;
+		[SerializeField]
+		private AudioSource audioSource;
+		[SerializeField]
+		private AudioClip bonusClip;
 
 		private Text mainScore;
 
@@ -39,8 +43,10 @@ namespace Game.Views
 		/// Отображает бонусные очки
 		/// </summary>
 		private void DisplayBonus(float bonus) {
+			if (bonus <= 0) return;
 			bonusScore.text = "+" + Math.Round(bonus).ToString();
 			bonusAnimator.SetTrigger("Bonus");
+			audioSource.PlayOneShot(bonusClip);
 		}
 	}
 }
