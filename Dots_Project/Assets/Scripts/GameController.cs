@@ -44,8 +44,10 @@ namespace Game
 		private IEnumerator Game() {
 			generateLine.NewLine(lineStartLength);
 			while (timer.RestTime > 0) {
-				yield return new WaitForSeconds(1f);    // задержка между уровнями
-				if (repeatLine.IsLineRepeated) generateLine.NewLine(lineStartLength);
+				if (repeatLine.IsLineRepeated) {
+					yield return new WaitForSeconds(1f);    // задержка между уровнями
+					generateLine.NewLine(lineStartLength);
+				}
 				yield return StartCoroutine(generateLine.DrawLine(lineTrail, drawSpeed, 1f));   // ждем отрисовки линии
 				timer.StartCounting();
 				repeatLine.Repeat(generateLine.Path);
@@ -68,6 +70,10 @@ namespace Game
 				score.Plus(timer.LevelTime, lineStartLength); // прибавляем набранные очки
 				if (lineStartLength < lineMaxLength) lineStartLength++;
 			} else timer.ReduceTime();    // убавляем время за неправильную линию
+		}
+
+		private void OnDestroy() {
+			TableData.Instance.SaveRecord(score.CurrentScore);
 		}
 	}
 }

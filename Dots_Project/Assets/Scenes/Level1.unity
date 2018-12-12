@@ -1802,6 +1802,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bonusScore: {fileID: 2028581071}
   bonusAnimator: {fileID: 1113980438}
+  audioSource: {fileID: 1569203120}
+  bonusClip: {fileID: 8300000, guid: 89141f9b65bd8c8409b649a3d3f62bdc, type: 3}
 --- !u!1 &1666647699
 GameObject:
   m_ObjectHideFlags: 0
