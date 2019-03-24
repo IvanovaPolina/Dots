@@ -12,12 +12,12 @@ namespace Game.Views
 		private Slider slider;
 
 		private void Awake() {
-			Timer.OnTimerValueChanged += TimerValue;
+			Timer.TimerValueChanged += TimerValue;
 			slider = GetComponent<Slider>();
 		}
 
 		private void OnDestroy() {
-			Timer.OnTimerValueChanged -= TimerValue;
+			Timer.TimerValueChanged -= TimerValue;
 		}
 
 		/// <summary>

@@ -10,19 +10,24 @@ namespace Game
 	/// </summary>
 	public class RepeatLine : MonoBehaviour
 	{
+		#region Events
+
 		/// <summary>
-		/// Делегат передаёт состояние игры, можно ли отображать взаимодействие с экраном
+		/// Событие передаёт состояние игры, можно ли отображать взаимодействие с экраном
 		/// </summary>
-		public static Action<bool> OnFingerCouldPress;
+		public static event Action<bool> OnFingerCouldPress;
 		/// <summary>
-		/// Делегат принимает в качестве аргумента значение, указывающее, коснулся ли игрок одной из точек линии.
+		/// Событие принимает в качестве аргумента значение, указывающее, коснулся ли игрок одной из точек линии.
 		/// Вторым аргументом является данная клетка
 		/// </summary>
-		public static Action<bool, Cell> OnRightCellClicked;
+		public static event Action<bool, Cell> OnRightCellClicked;
 		/// <summary>
-		/// Делегат срабатывает при сбросе внешнего вида клеток до стандартного
+		/// Событие срабатывает при сбросе внешнего вида клеток до стандартного
 		/// </summary>
-		public static Action<List<Cell>> OnCellsStatesReset;
+		public static event Action<List<Cell>> OnCellsStatesReset;
+
+		#endregion
+
 		/// <summary>
 		/// Правильно ли повторил игрок линию?
 		/// </summary>
@@ -38,8 +43,7 @@ namespace Game
 		private Cell currentCell;		// клетка, выбранная игроком на данный момент
 		private List<Cell> restOfPath = new List<Cell>(9);		// сколько точек из линии осталось повторить
 		private List<Cell> selectedCells = new List<Cell>(9);	// все точки, выделенные игроком
-
-
+		
 		/// <summary>
 		/// Режим игры
 		/// </summary>
@@ -72,13 +76,10 @@ namespace Game
 					DrawUpdate();
 					break;
 			}
-			if (Timer.Instance.RestTime <= 0) {
-				IsFinishRepeating = true;
-				timeIsOver = true;
-			}
 		}
 
-// ---------------- Выполняется каждый кадр ---------------------
+		#region ---------------- Выполняется каждый кадр ---------------------
+
 		private void NoneUpdate() {
 
 		}
@@ -108,7 +109,41 @@ namespace Game
 			}
 			currentCell = null;
 		}
-// --------------------------------------------------------------
+
+		#endregion --------------------------------------------------------------
+
+		#region ---------------- Выполняется один раз ------------------------
+
+		private void Awake()
+		{
+			Timer.TimerIsOver += GameOver;
+		}
+
+		private void OnDestroy()
+		{
+			Timer.TimerIsOver -= GameOver;
+		}
+
+		private void OnceNone() {
+			IsFinishRepeating = true;
+			if (OnFingerCouldPress != null) OnFingerCouldPress.Invoke(false);
+			if (selectedCells.Count > 0) {
+				if (OnCellsStatesReset != null) OnCellsStatesReset.Invoke(selectedCells);
+				foreach (var cell in selectedCells)
+					cell.Collider2D.enabled = true;
+				selectedCells.Clear();
+			}
+		}
+
+		private void OnceWait() {
+
+		}
+
+		private void OnceDraw() {
+			if(OnFingerCouldPress != null) OnFingerCouldPress.Invoke(true);
+		}
+
+		#endregion --------------------------------------------------------------
 
 		/// <summary>
 		/// Устанавливает текущий режим игры (режим повтора линии, режим бездействия и т.д.)
@@ -128,27 +163,6 @@ namespace Game
 			}
 			currentState = state;
 		}
-
-// ---------------- Выполняется один раз ------------------------
-		private void OnceNone() {
-			IsFinishRepeating = true;
-			if (OnFingerCouldPress != null) OnFingerCouldPress.Invoke(false);
-			if (selectedCells.Count > 0) {
-				if (OnCellsStatesReset != null) OnCellsStatesReset.Invoke(selectedCells);
-				foreach (var cell in selectedCells)
-					cell.Collider2D.enabled = true;
-				selectedCells.Clear();
-			}
-		}
-
-		private void OnceWait() {
-
-		}
-
-		private void OnceDraw() {
-			if(OnFingerCouldPress != null) OnFingerCouldPress.Invoke(true);
-		}
-// --------------------------------------------------------------
 
 		/// <summary>
 		/// Запускает режим повтора линии. Позволяет игроку начать повторять линию
@@ -175,6 +189,17 @@ namespace Game
 			RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, float.PositiveInfinity, 1 << LayerMask.NameToLayer("Cell"));
 			currentCell = hit ? hit.collider.GetComponent<Cell>() : null;
 			return hit;
+		}
+
+		/// <summary>
+		/// Прерывает повтор линии, если таймер игры истек
+		/// </summary>
+		private void GameOver()
+		{
+			IsFinishRepeating = true;
+			timeIsOver = true;
+			if (OnFingerCouldPress != null)
+				OnFingerCouldPress.Invoke(false);
 		}
 	}
 }

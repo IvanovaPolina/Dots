@@ -15,23 +15,15 @@ namespace Game
 		[Tooltip("Часть от максимального времени (1/2, 1/3 ... 1/PartOfTheMaxTime), которая будет дана при старте")]
 		[Range(1f, 5f)] [SerializeField]
 		private float partOfTheMaxTime = 4f; // часть максимального времени при старте игры (здесь: 1/4)
-
+		
 		/// <summary>
-		/// Делегат отвечает за передачу измененного значения таймера
-		/// </summary>
-		public static UnityAction<float> OnTimerValueChanged;
-		/// <summary>
-		/// Делегат отвечает за передачу значения превышенного набранного времени от максимально доступного
-		/// </summary>
-		public static UnityAction<float> OnBonusValueChanged;
-		/// <summary>
-		/// Доступ к данному классу
-		/// </summary>
+										   /// Доступ к данному классу
+										   /// </summary>
 		public static Timer Instance { get; private set; }
 		/// <summary>
 		/// Оставшееся время до конца игры
 		/// </summary>
-		public float RestTime { get; private set; }
+		private float RestTime { get; set; }
 		/// <summary>
 		/// Время, набранное игроком сверх максимального
 		/// </summary>
@@ -48,6 +40,23 @@ namespace Game
 		private float frequency = 1f;       // частота убывания времени (единиц в секунду)
 		private float penalty = 1f;     // время, отнимаемое за неправильно повторенную линию
 
+		#region Events
+
+		/// <summary>
+		/// Событие окончания времени игры
+		/// </summary>
+		public static event UnityAction TimerIsOver;
+		/// <summary>
+		/// Событие отвечает за передачу измененного значения таймера
+		/// </summary>
+		public static event UnityAction<float> TimerValueChanged;
+		/// <summary>
+		/// Событие отвечает за передачу значения превышенного набранного времени от максимально доступного
+		/// </summary>
+		public static event UnityAction<float> BonusValueChanged;
+
+		#endregion
+
 		private void Awake() {
 			// создаем единственный экземпляр данного класса, т.к. время у нас одно на протяжении всей игры
 			// и доступ к данному классу необходим без создания его экземпляров
@@ -58,14 +67,15 @@ namespace Game
 		}
 
 		private void Start() {
-			if (OnTimerValueChanged != null) OnTimerValueChanged.Invoke(Proportion);
+			if (TimerValueChanged != null)
+				TimerValueChanged(Proportion);
 		}
 
 		/// <summary>
 		/// Начинает/возобновляет отсчет таймера
 		/// </summary>
 		public void StartCounting() {
-			LevelTime = RestTime;
+			LevelTime = 0;
 			StartCoroutine("StartCount");
 		}
 
@@ -73,7 +83,6 @@ namespace Game
 		/// Останавливает отсчет таймера
 		/// </summary>
 		public void StopCounting() {
-			LevelTime -= RestTime;
 			StopCoroutine("StartCount");
 		}
 
@@ -82,11 +91,18 @@ namespace Game
 		/// </summary>
 		private IEnumerator StartCount() {
 			while (true) {
-				if (RestTime > 0) {
+				if (RestTime > 0)
+				{
 					RestTime -= frequency;
-					if (OnTimerValueChanged != null) OnTimerValueChanged.Invoke(Proportion);
-				} else yield break;
-				//Debug.Log(RestTime);
+					LevelTime += frequency;
+					if (TimerValueChanged != null)
+						TimerValueChanged(Proportion);
+				}
+				else
+				{
+					TimerIsOver();
+					yield break;
+				}
 				yield return new WaitForSeconds(1f);
 			}
 		}
@@ -98,10 +114,12 @@ namespace Game
 			RestTime *= 2f;
 			if (RestTime > maxTime) {
 				Bonus = RestTime - maxTime;
-				if(OnBonusValueChanged != null) OnBonusValueChanged.Invoke(Bonus);
+				if(BonusValueChanged != null)
+					BonusValueChanged(Bonus);
 				RestTime = maxTime;
 			}
-			if(OnTimerValueChanged != null) OnTimerValueChanged.Invoke(Proportion);
+			if(TimerValueChanged != null)
+				TimerValueChanged(Proportion);
 		}
 
 		/// <summary>
@@ -109,7 +127,11 @@ namespace Game
 		/// </summary>
 		public void ReduceTime() {
 			RestTime -= penalty;
-			if (OnTimerValueChanged != null) OnTimerValueChanged.Invoke(Proportion);
+			if (TimerValueChanged != null)
+				TimerValueChanged(Proportion);
+
+			if (RestTime <= 0)
+				TimerIsOver();
 		}
 	}
 }

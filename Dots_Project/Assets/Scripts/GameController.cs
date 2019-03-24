@@ -14,21 +14,29 @@ namespace Game
 		private RepeatLine repeatLine;      // скрипт, который позволяет игроку повторить линию
 		private Timer timer;
 		private Score score;
-		
-		[Tooltip("Изначальная длина линии при старте игры")]
-		[Range(2,9)] [SerializeField]
-		private int lineStartLength = 3;    // изначальная длина линии
-		private int lineMaxLength;      // максимальная длина линии
+		private AudioSource audioSource;
 
+		[Tooltip("Изначальная длина линии при старте игры")]
+		[Range(2, 9)]
+		[SerializeField]
+		private int lineStartLength = 3;
+		private int lineMaxLength;      // максимальная длина линии
 		[SerializeField]
 		private TrailRenderer lineTrail;    // ссылка на объект, которым будем рисовать линию
 		[Tooltip("Изначальная скорость отрисовки линии")]
-		[Range(1f, 10f)] [SerializeField]
-		private float drawSpeed = 2f;   // скорость отрисовки линии
-		
-		private AudioSource audioSource;
+		[Range(1f, 10f)]
+		[SerializeField]
+		private float drawSpeed = 2f;
 
-		private void Start() {
+		private bool isGameOver = false;
+
+		private void Awake()
+		{
+			Timer.TimerIsOver += GameOver;
+		}
+
+		private void Start()
+		{
 			generateLine = gameObject.AddComponent<GenerateLine>();
 			repeatLine = gameObject.AddComponent<RepeatLine>();
 			timer = Timer.Instance;
@@ -41,39 +49,55 @@ namespace Game
 			StartCoroutine(Game());
 		}
 
-		private IEnumerator Game() {
+		private IEnumerator Game()
+		{
 			generateLine.NewLine(lineStartLength);
-			while (timer.RestTime > 0) {
-				if (repeatLine.IsLineRepeated) {
+			while (!isGameOver)
+			{
+				if (repeatLine.IsLineRepeated)
+				{
 					yield return new WaitForSeconds(1f);    // задержка между уровнями
 					generateLine.NewLine(lineStartLength);
 				}
 				yield return StartCoroutine(generateLine.DrawLine(lineTrail, drawSpeed, 1f));   // ждем отрисовки линии
 				timer.StartCounting();
 				repeatLine.Repeat(generateLine.Path);
-				yield return new WaitUntil(() => repeatLine.IsFinishRepeating); // ждем, пока игрок повторит её
+				yield return new WaitUntil(() => repeatLine.IsFinishRepeating || isGameOver); // ждем, пока игрок повторит её
 				timer.StopCounting();
 				CheckLineRepeating();
 				yield return null;
 			}
-			audioSource.Play();
-			TableData.Instance.SaveRecord(score.CurrentScore);
-			GameMenu.Instance.DisplayPanel(GameMenu.Panel.Lose);
 		}
 
 		/// <summary>
 		/// Проверяет повторение линии игроком, и в зависимости от этого начисляет бонусы/штрафы
 		/// </summary>
-		private void CheckLineRepeating() {
-			if (repeatLine.IsLineRepeated) {
+		private void CheckLineRepeating()
+		{
+			if (isGameOver) return;
+
+			if (repeatLine.IsLineRepeated)
+			{
 				timer.MultTime();  // удваиваем время за правильную линию
 				score.Plus(timer.LevelTime, lineStartLength); // прибавляем набранные очки
 				if (lineStartLength < lineMaxLength) lineStartLength++;
-			} else timer.ReduceTime();    // убавляем время за неправильную линию
+			}
+			else timer.ReduceTime();    // убавляем время за неправильную линию
 		}
 
-		private void OnDestroy() {
+		private void GameOver()
+		{
+			isGameOver = true;
+			audioSource.Play();
 			TableData.Instance.SaveRecord(score.CurrentScore);
+			GameMenu.Instance.DisplayPanel(GameMenu.Panel.Lose);
+		}
+
+		private void OnDestroy()
+		{
+			if (!isGameOver)
+				TableData.Instance.SaveRecord(score.CurrentScore);
+			Timer.TimerIsOver -= GameOver;
 		}
 	}
 }

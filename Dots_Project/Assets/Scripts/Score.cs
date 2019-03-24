@@ -32,11 +32,11 @@ namespace Game
 			if (Instance) DestroyImmediate(this);
 			else Instance = this;
 
-			Timer.OnBonusValueChanged += BonusChange;
+			Timer.BonusValueChanged += BonusChange;
 		}
 
 		private void OnDestroy() {
-			Timer.OnBonusValueChanged -= BonusChange;
+			Timer.BonusValueChanged -= BonusChange;
 		}
 
 		/// <summary>
