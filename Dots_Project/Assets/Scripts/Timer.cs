@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Game
 {
@@ -45,15 +45,15 @@ namespace Game
 		/// <summary>
 		/// Событие окончания времени игры
 		/// </summary>
-		public static event UnityAction TimerIsOver;
+		public static event Action TimerIsOver;
 		/// <summary>
 		/// Событие отвечает за передачу измененного значения таймера
 		/// </summary>
-		public static event UnityAction<float> TimerValueChanged;
+		public static event Action<float> TimerValueChanged;
 		/// <summary>
 		/// Событие отвечает за передачу значения превышенного набранного времени от максимально доступного
 		/// </summary>
-		public static event UnityAction<float> BonusValueChanged;
+		public static event Action<float> BonusValueChanged;
 
 		#endregion
 

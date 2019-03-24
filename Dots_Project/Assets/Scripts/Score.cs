@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using UnityEngine.Events;
+﻿using System;
+using UnityEngine;
 
 namespace Game
 {
@@ -13,19 +13,24 @@ namespace Game
 		/// </summary>
 		public static Score Instance { get; private set; }
 		/// <summary>
-		/// Делегат отвечает за передачу измененного значения счета
-		/// </summary>
-		public static UnityAction<float> OnScoreValueChanged;
-		/// <summary>
-		/// Делегат отвечает за передачу значения текущих бонусных очков
-		/// </summary>
-		public static UnityAction<float> OnBonusValueChanged;
-		/// <summary>
 		/// Текущий счет
 		/// </summary>
 		public float CurrentScore { get { return score; } }
 
 		private float score = 0;
+
+		#region Events
+
+		/// <summary>
+		/// Событие отвечает за передачу измененного значения счета
+		/// </summary>
+		public static event Action<float> ScoreValueChanged;
+		/// <summary>
+		/// Событие отвечает за передачу значения текущих бонусных очков
+		/// </summary>
+		public static event Action<float> BonusValueChanged;
+
+		#endregion
 
 		private void Awake() {
 			// создаем единственный экземпляр данного класса
@@ -46,7 +51,7 @@ namespace Game
 		/// <param name="dotsCount">Количество соединенных точек</param>
 		public void Plus(float time, int dotsCount) {
 			score += time * dotsCount;
-			if (OnScoreValueChanged != null) OnScoreValueChanged.Invoke(score);
+			if (ScoreValueChanged != null) ScoreValueChanged.Invoke(score);
 		}
 
 		/// <summary>
@@ -56,7 +61,7 @@ namespace Game
 		private void BonusChange(float bonusTime) {
 			float tempBonus = bonusTime / 2f;
 			score += tempBonus;
-			if(OnBonusValueChanged != null) OnBonusValueChanged.Invoke(tempBonus);
+			if(BonusValueChanged != null) BonusValueChanged.Invoke(tempBonus);
 		}
 	}
 }

@@ -16,9 +16,9 @@ namespace Game.Menu.Records
 		/// </summary>
 		public static TableData Instance { get; private set; }
 		/// <summary>
-		/// Делегат передает текущую таблицу рекордов
+		/// Событие передает текущую таблицу рекордов
 		/// </summary>
-		public static UnityAction<List<Raw>> OnRecordsChanged;
+		public static event Action<List<Raw>> RecordsChanged;
 
 		private RecordsData recordsData;
 		private List<Raw> records;      // ранее установленные рекорды
@@ -33,7 +33,7 @@ namespace Game.Menu.Records
 		private void Start() {
 			recordsData = new RecordsData();
 			records = recordsData.Load();   // при старте игры сразу подгружаем все рекорды, если таковые имеются
-			if (OnRecordsChanged != null) OnRecordsChanged.Invoke(records);
+			if (RecordsChanged != null) RecordsChanged.Invoke(records);
 		}
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace Game.Menu.Records
 			for (int i = 0; i < records.Count; i++)
 				records[i].Number = i + 1;
 
-			if (OnRecordsChanged != null) OnRecordsChanged.Invoke(records);
+			if (RecordsChanged != null) RecordsChanged.Invoke(records);
 			recordsData.Save(records);
 		}
 	}

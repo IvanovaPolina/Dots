@@ -22,14 +22,14 @@ namespace Game.Views
 		private Text mainScore;
 
 		private void Awake() {
-			Score.OnScoreValueChanged += ChangeScore;
-			Score.OnBonusValueChanged += DisplayBonus;
+			Score.ScoreValueChanged += ChangeScore;
+			Score.BonusValueChanged += DisplayBonus;
 			mainScore = GetComponent<Text>();
 		}
 
 		private void OnDestroy() {
-			Score.OnScoreValueChanged -= ChangeScore;
-			Score.OnBonusValueChanged -= DisplayBonus;
+			Score.ScoreValueChanged -= ChangeScore;
+			Score.BonusValueChanged -= DisplayBonus;
 		}
 
 		/// <summary>

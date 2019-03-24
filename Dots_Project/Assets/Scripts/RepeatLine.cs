@@ -15,16 +15,16 @@ namespace Game
 		/// <summary>
 		/// Событие передаёт состояние игры, можно ли отображать взаимодействие с экраном
 		/// </summary>
-		public static event Action<bool> OnFingerCouldPress;
+		public static event Action<bool> FingerCouldPress;
 		/// <summary>
 		/// Событие принимает в качестве аргумента значение, указывающее, коснулся ли игрок одной из точек линии.
 		/// Вторым аргументом является данная клетка
 		/// </summary>
-		public static event Action<bool, Cell> OnRightCellClicked;
+		public static event Action<bool, Cell> RightCellClicked;
 		/// <summary>
 		/// Событие срабатывает при сбросе внешнего вида клеток до стандартного
 		/// </summary>
-		public static event Action<List<Cell>> OnCellsStatesReset;
+		public static event Action<List<Cell>> CellsStatesReset;
 
 		#endregion
 
@@ -99,7 +99,7 @@ namespace Game
 			if (!IsClickOnTheCell()) return;
 
 			bool isRightCell = currentCell == restOfPath[0];
-			if (OnRightCellClicked != null) OnRightCellClicked.Invoke(isRightCell, currentCell);
+			if (RightCellClicked != null) RightCellClicked.Invoke(isRightCell, currentCell);
 			currentCell.Collider2D.enabled = false;
 			selectedCells.Add(currentCell);
 			if (isRightCell) restOfPath.Remove(currentCell);
@@ -126,9 +126,9 @@ namespace Game
 
 		private void OnceNone() {
 			IsFinishRepeating = true;
-			if (OnFingerCouldPress != null) OnFingerCouldPress.Invoke(false);
+			if (FingerCouldPress != null) FingerCouldPress.Invoke(false);
 			if (selectedCells.Count > 0) {
-				if (OnCellsStatesReset != null) OnCellsStatesReset.Invoke(selectedCells);
+				if (CellsStatesReset != null) CellsStatesReset.Invoke(selectedCells);
 				foreach (var cell in selectedCells)
 					cell.Collider2D.enabled = true;
 				selectedCells.Clear();
@@ -140,7 +140,7 @@ namespace Game
 		}
 
 		private void OnceDraw() {
-			if(OnFingerCouldPress != null) OnFingerCouldPress.Invoke(true);
+			if(FingerCouldPress != null) FingerCouldPress.Invoke(true);
 		}
 
 		#endregion --------------------------------------------------------------
@@ -198,8 +198,8 @@ namespace Game
 		{
 			IsFinishRepeating = true;
 			timeIsOver = true;
-			if (OnFingerCouldPress != null)
-				OnFingerCouldPress.Invoke(false);
+			if (FingerCouldPress != null)
+				FingerCouldPress.Invoke(false);
 		}
 	}
 }

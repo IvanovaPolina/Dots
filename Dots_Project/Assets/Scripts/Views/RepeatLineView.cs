@@ -19,11 +19,11 @@ namespace Game.Views
 
 		private void Awake() {
 			audioSource = GetComponent<AudioSource>();
-			RepeatLine.OnRightCellClicked += ChangeCellState;
-			RepeatLine.OnCellsStatesReset += ResetCellsStates;
+			RepeatLine.RightCellClicked += ChangeCellState;
+			RepeatLine.CellsStatesReset += ResetCellsStates;
 			fingerTrail = Instantiate(fingerTrail);
 			CreateTrail(false);
-			RepeatLine.OnFingerCouldPress += CreateTrail;
+			RepeatLine.FingerCouldPress += CreateTrail;
 		}
 
 		private void Update() {
@@ -33,9 +33,9 @@ namespace Game.Views
 		}
 
 		private void OnDestroy() {
-			RepeatLine.OnRightCellClicked -= ChangeCellState;
-			RepeatLine.OnCellsStatesReset -= ResetCellsStates;
-			RepeatLine.OnFingerCouldPress -= CreateTrail;
+			RepeatLine.RightCellClicked -= ChangeCellState;
+			RepeatLine.CellsStatesReset -= ResetCellsStates;
+			RepeatLine.FingerCouldPress -= CreateTrail;
 		}
 
 		/// <summary>

@@ -14,12 +14,12 @@ namespace Game.Menu.Records
 		private List<RawView> table;
 
 		private void Awake() {
-			TableData.OnRecordsChanged += DisplayTable;
+			TableData.RecordsChanged += DisplayTable;
 			table = new List<RawView>();
 		}
 		
 		private void OnDestroy() {
-			TableData.OnRecordsChanged -= DisplayTable;
+			TableData.RecordsChanged -= DisplayTable;
 		}
 
 		/// <summary>
